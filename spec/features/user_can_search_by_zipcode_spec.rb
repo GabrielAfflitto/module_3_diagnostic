@@ -11,12 +11,15 @@ describe "When a user visits the root page" do
     fill_in "Search by zipcode", with: "80203"
     click_on "Locate"
 
-    conn = Faraday.new("")
+    conn = Faraday.new(url: "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?") do |faraday|
+      faraday.headers['api_key'] = ENV["API_KEY"]
+      faraday.adapter Faraday.default_adapter
+    end
 
     stations = JSON.parse(response.body)
 
     expect(current_path).to eq(search_path)
-    expect(page).to have_content
+    # expect(page).to have_content
   end
 end
 
