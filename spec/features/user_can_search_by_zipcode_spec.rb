@@ -4,18 +4,16 @@ describe "When a user visits the root page" do
   it "should allow the user to search by a zipcode" do
     visit root_path
 
-    within ".form-group" do
-      expect(page).to have_content("Search by zipcode")
-    end
-
-    fill_in "Search by zipcode", with: "80203"
+    # save_and_open_page
+    fill_in "q", with: "80203"
     click_on "Locate"
 
-    conn = Faraday.new(url: "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?") do |faraday|
+    conn = Faraday.new(url: "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearest.json?") do |faraday|
       faraday.headers['api_key'] = ENV["API_KEY"]
       faraday.adapter Faraday.default_adapter
     end
 
+    response = conn.get("/location=80203&fuel_type=ELEC&LPG")
     stations = JSON.parse(response.body)
 
     expect(current_path).to eq(search_path)
