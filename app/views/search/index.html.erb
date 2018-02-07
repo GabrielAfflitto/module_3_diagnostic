@@ -1,6 +1,9 @@
 <div class="stations">
 <% @search.each do |station| %>
+  <%= station[:station_name] %>
   <%= station[:street_address] %>
   <%= station[:fuel_type_code] %>
+  <%= station[:distance] %>
+  <%= station[:access_days_time] %>
 <% end %>
 </div>
