@@ -1,9 +1,17 @@
 <div class="stations">
 <% @search.each do |station| %>
-  <%= station[:station_name] %>
-  <%= station[:street_address] %>
-  <%= station[:fuel_type_code] %>
-  <%= station[:distance] %>
-  <%= station[:access_days_time] %>
+<div class="">
+  Name: <%= station[:station_name] %>
+  <br>
+  Address: <%= station[:street_address] %>
+  <br>
+  Fuel Type: <%= station[:fuel_type_code] %>
+  <br>
+  Distance: <%= station[:distance] %>
+  <br>
+  Access: <%= station[:access_days_time] %>
+  <br>
+  <br>
+</div>
 <% end %>
 </div>
