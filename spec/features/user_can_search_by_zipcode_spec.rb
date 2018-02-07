@@ -10,14 +10,25 @@ describe "When a user visits the root page" do
     expect(current_path).to eq(search_path)
 
     conn = Faraday.new(url: "https://developer.nrel.gov/api/alt-fuel-stations/v1") do |faraday|
-      faraday.headers['api_key'] = ENV["API_KEY"]
+      faraday.headers['x-api-key'] = ENV["API_KEY"]
       faraday.headers['Accept'] = 'application/json'
       faraday.adapter    Faraday.default_adapter
     end
 
-    response = conn.get("nearest?&location=80219&fuel_type=ELEC&LPG")
-    stations = JSON.parse(response.body)
-    # expect(page).to have_content
+    response = conn.get("nearest?&location=80203&fuel_type=ELEC&LPG&limit=10")
+    stations = JSON.parse(response.body, symbolize_names: true)
+    # binding.pry
+    expect(stations.count).to eq(10)
+    expect(page).to have_content("ELEC")
+    expect(page).to have_content("LPG")
+    expect(page).to_not have_content("E85")
+    expect(page).to_not have_content("BD")
+    expect(page).to_not have_content("CNG")
+    expect(page).to_not have_content("HY")
+
+    within ".stations" do
+      expect(page).to have_content(stations[:fuel_stations].first[:street_address])
+    end
   end
 end
 
