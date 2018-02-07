@@ -18,16 +18,20 @@ describe "When a user visits the root page" do
     response = conn.get("nearest?&location=80203&fuel_type=ELEC&LPG&limit=10")
     stations = JSON.parse(response.body, symbolize_names: true)
     # binding.pry
-    expect(stations.count).to eq(10)
-    expect(page).to have_content("ELEC")
-    expect(page).to have_content("LPG")
+    expect(stations[:fuel_stations].count).to eq(10)
+    expect(page).to have_content("ELEC" || "LPG")
+    # expect(page).to have_content("LPG")
     expect(page).to_not have_content("E85")
     expect(page).to_not have_content("BD")
     expect(page).to_not have_content("CNG")
     expect(page).to_not have_content("HY")
 
     within ".stations" do
+      expect(page).to have_content(stations[:fuel_stations].first[:station_name])
       expect(page).to have_content(stations[:fuel_stations].first[:street_address])
+      expect(page).to have_content(stations[:fuel_stations].first[:fuel_type_code])
+      expect(page).to have_content(stations[:fuel_stations].first[:distance])
+      expect(page).to have_content(stations[:fuel_stations].first[:access_days_time])
     end
   end
 end
